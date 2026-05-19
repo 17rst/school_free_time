@@ -8,6 +8,9 @@ document.getElementById('liberary-card').addEventListener('click', () => {
 document.getElementById('profile').addEventListener('click', () => {
   window.location.href = "/login/index.html";
 });
+document.getElementById('place-card').addEventListener('click', () => {
+  window.location.href = "/view/index.html";
+});
 // 혼잡도 데이터를 나중에 API로 받아올 수 있도록 구조 준비
 const congestionData = {
   cafeteria: "여유 있음",

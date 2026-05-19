@@ -18,6 +18,7 @@ app.use('/chat', express.static('chat'));
 app.use('/lib', express.static('lib'));
 app.use('/admin', express.static('admin'));
 app.use('/login', express.static('login'));
+app.use('/view', express.static('view'));
 let waitingUser = null;
 let seats = Array.from({ length: 187 }, (_, i) => ({
   id: 1+i,
