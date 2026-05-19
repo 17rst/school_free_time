@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>층별 이미지 보기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 왼쪽 영역: 이미지 -->
+     
+    <button id="home-btn">← 뒤로가기</button>
+    <div class="content">
+      <img id="floor1" src="../다니엘관 안내도(의자)/다니엘관 B1(의자).png" alt="B1층 이미지">
+      <img id="floor2" src="../다니엘관 안내도(의자)/다니엘관 1층(의자).png" alt="1층 이미지">
+      <img id="floor3" src="../다니엘관 안내도(의자)/다니엘관 2층.png" alt="2층 이미지">
+      <img id="floor4" src="../다니엘관 안내도(의자)/다니엘관 3층(의자).png" alt="3층 이미지">
+      <img id="floor5" src="../다니엘관 안내도(의자)/다니엘관 4층(의자).png" alt="4층 이미지">
+      <img id="floor6" src="../다니엘관 안내도(의자)/다니엘관 5층(의자).png" alt="5층 이미지">
+    </div>
+
+    <!-- 오른쪽 영역: 버튼 (하단 배치) -->
+    <div class="sidebar">
+      <div class="buttons">
+        <button data-target="floor1">B1층</button>
+        <button data-target="floor2">1층</button>
+        <button data-target="floor3">2층</button>
+        <button data-target="floor4">3층</button>
+        <button data-target="floor5">4층</button>
+        <button data-target="floor6">5층</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+#home-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 8px 12px;
+  font-size: 14px;
+  background: rgba(255,255,255,0.8);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  z-index: 10;
+}
+.container {
+  display: flex;
+  height: 100vh; /* 화면 전체 높이 */
+}
+
+.content {
+  flex: 3; /* 왼쪽 큰 영역 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+}
+
+.content img {
+  max-width: 100%;
+  max-height: 100%;
+  display: none;
+}
+
+.content img.active {
+  display: block;
+}
+
+.sidebar {
+  flex: 1; /* 오른쪽 영역 */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* 하단에 버튼 배치 */
+  align-items: center;
+  background: #f0f0f0;
+  padding: 20px;
+}
+
+.buttons {
+  width: 100%;
+}
+
+.sidebar button {
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  cursor: pointer;
+}
