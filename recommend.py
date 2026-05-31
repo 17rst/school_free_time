@@ -26,6 +26,16 @@ CORS(app)  # Node.js에서 fetch 요청 시 CORS 오류 방지
 
 import os
 
+# recommend.py 위치를 기준으로 seats.sqlite 경로를 자동 계산합니다.
+# 덕분에 로컬(Windows), 배포 서버(Linux) 어디서든 경로 수정 없이 동작합니다.
+#
+# 폴더 구조 (recommend.py는 seats.sqlite와 같은 폴더에 두세요):
+#   school_free_time/
+#     ├── seats.sqlite   ← DB
+#     ├── recommend.py   ← 이 파일
+#     └── lib/
+#         ├── index.html
+#         └── index.js
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # 이 파일이 있는 폴더
 DB_PATH  = os.path.join(BASE_DIR, "seats.sqlite")      # 같은 폴더의 seats.sqlite
 
@@ -67,7 +77,17 @@ def euclidean_distance(a: dict, b: dict) -> float:
 
 def knn_score(seat: dict, occupied_seats: list[dict], k: int) -> float:
     """
-    특정 좌석에서 가장 가까운 K개 사용중 좌석까지의 거리 합을 반환합니다.
+    특정 좌석에서 가장 가까운 K개 사용중 좌석까지의 가중 거리 합을 반환합니다.
+
+    가중치 규칙:
+        1번째(가장 가까운 좌석): 3.3
+        2번째:                   3.0
+        3번째:                   2.7
+        ...이후 0.3씩 감소
+        최소 가중치:             0.3 (음수 방지)
+
+    가중치가 높을수록 가까운 사용중 좌석의 영향이 커지므로
+    붐비는 구역 근처 자리는 점수가 크게 낮아집니다.
     이 값이 클수록 → 사람들과 멀리 떨어진 조용한 자리
 
     Args:
@@ -76,17 +96,24 @@ def knn_score(seat: dict, occupied_seats: list[dict], k: int) -> float:
         k:              참고할 인접 좌석 수 (기본값 10)
 
     Returns:
-        가장 가까운 K개 사용중 좌석까지의 거리 합계 (float)
+        가장 가까운 K개 사용중 좌석까지의 가중 거리 합계 (float)
     """
     # 사용중인 모든 좌석과의 거리를 계산하여 오름차순 정렬
     distances = sorted(
         [euclidean_distance(seat, occ) for occ in occupied_seats]
     )
 
-    # 가장 가까운 K개만 선택하여 합산
-    # (사용중 좌석이 K개 미만이면 전체 사용)
+    # 사용중 좌석이 K개 미만이면 전체 사용
     k = min(k, len(distances))
-    return sum(distances[:k])
+
+    # 가중치: 1번째=3.3, 2번째=3.0, 3번째=2.7 ... 0.3씩 감소, 최소 0.3
+    # 예) k=10이면 가중치 = [3.3, 3.0, 2.7, 2.4, 2.1, 1.8, 1.5, 1.2, 0.9, 0.6]
+    weights = [max(3.3 - i * 0.3, 0.3) for i in range(k)]
+
+    # 거리 × 가중치 합산
+    weighted_sum = sum(d * w for d, w in zip(distances[:k], weights))
+
+    return weighted_sum
 
 
 def recommend(seats: list[dict], k: int = 10) -> list[dict]:
