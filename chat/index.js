@@ -11,6 +11,9 @@ socket.on('waiting', () => {
 
 socket.on('matched', () => {
     document.getElementById('status').textContent = "상대방과 연결되었습니다!";
+    document.getElementById('status').className = "status-badge matched";
+    document.getElementById('message-input').disabled = false;
+    document.getElementById('send-btn').disabled = false;
 });
 
 socket.on('message', (msg) => {
@@ -22,6 +25,9 @@ socket.on('message', (msg) => {
 
 socket.on('partner_left', () => {
     document.getElementById('status').textContent = "상대방이 나갔습니다.";
+    document.getElementById('status').className = "status-badge left";
+    document.getElementById('message-input').disabled = true;
+    document.getElementById('send-btn').disabled = true;
 });
 
 document.getElementById('send-btn').addEventListener('click', () => {
