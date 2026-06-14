@@ -16,8 +16,8 @@ socket.on('seatsUpdated', (seatLayout) => {
       div.textContent = seat.id;
 
       // 좌표 기반 배치
-      const TiltingX=-50;
-      const TiltingY=-350;
+      const TiltingX= 50;
+      const TiltingY= -150;
       div.style.left = seat.posX+TiltingX + 'px';
       div.style.top = seat.posY+TiltingY + 'px';
 
