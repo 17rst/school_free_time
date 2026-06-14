@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>층별 이미지 보기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -10,6 +13,22 @@
     <!-- 왼쪽 영역: 이미지 -->
      
     <button id="home-btn">← 뒤로가기</button>
+
+    <!-- 혼잡도 박스 (오른쪽 위) -->
+    <div id="congestion-box" class="congestion-box">
+      <div class="congestion-top">
+        <span class="congestion-building">다니엘관</span>
+        <span class="congestion-live"><span class="live-dot"></span>실시간</span>
+      </div>
+      <div class="congestion-main">
+        <span id="congestion-status" class="congestion-status">불러오는 중</span>
+        <span id="congestion-percent" class="congestion-percent">-</span>
+      </div>
+      <div class="congestion-bar">
+        <div id="congestion-fill" class="congestion-fill"></div>
+      </div>
+      <div id="congestion-count" class="congestion-count">- / -석</div>
+    </div>
     <div class="content">
       <img id="floor1" src="../다니엘관 안내도(의자)/다니엘관 B1(의자).png" alt="B1층 이미지">
       <img id="floor2" src="../다니엘관 안내도(의자)/다니엘관 1층(의자).png" alt="1층 이미지">
@@ -32,6 +51,7 @@
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
   <script src="index.js"></script>
 </body>
 </html>

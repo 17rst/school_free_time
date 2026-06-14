@@ -250,12 +250,6 @@ nav a:hover { color: var(--red); }
 }
 
 /* ─── CONGESTION SECTION ─────────────────────────────── */
-.congestion-section {
-  background: var(--white);
-  padding: 60px 40px;
-  color: var(--black);
-  border-top: 1.5px solid var(--lgray);
-}
 
 .congestion-grid {
   display: grid;
@@ -433,7 +427,6 @@ footer {
   .cards { grid-template-columns: 1fr; gap: 16px; }
 
   /* 혼잡도 섹션 */
-  .congestion-section { padding: 40px 16px; }
   .congestion-grid { grid-template-columns: 1fr; gap: 14px; }
 
   .predict-box {
