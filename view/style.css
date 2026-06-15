@@ -40,6 +40,41 @@ body {
 #backBtn:hover {
   background: rgba(200,200,200,0.9);
 }
+/* 말풍선 기본 스타일 */
+.tooltip {
+  position: absolute;
+  background: #fff;
+  color: #222;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, -120%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 20;
+}
+
+/* 말풍선 꼬리 */
+.tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+}
+
+.tooltip.show {
+  opacity: 1;
+}
+
+
 
 /* 누끼 건물 이미지 */
 .building {
@@ -78,4 +113,50 @@ body {
 #building5 {
   top: 400px;
   left: 908px;
+}
+#building6 {
+  top: 360px;
+  left: 560px;
+}
+
+#building7 {
+  top: 320px;
+  left: 895px;
+}
+
+#building8 {
+  top: 333px;
+  left: 385px;
+}
+#building9 {
+  top: 380px;
+  left: 340px;
+}
+
+#building10 {
+  top: 333px;
+  left: 895px;
+}
+#building11 {
+  top: 314px;
+  left: 623px;
+}
+
+#building12 {
+  top: 375px;
+  left: 1190px;
+}
+
+#building13 {
+  top: 455px;
+  left: 1440px;
+}
+#building14 {
+  top: 598px;
+  left: 725px;
+}
+
+#building15 {
+  top: 383px;
+  left: 1030px;
 }

@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const { userDB, seatDB } = require('./db');
+const { userDB, seatDB, timeDB } = require('./db');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
@@ -136,6 +136,59 @@ io.on('connection', (socket) => {
             socket.partner.partner = null;
         }
     });
+});
+const DAY_MAP = ["일","월","화","수","목","금","토"];
+function getPeriod(hour) {
+  const period = hour - 8; // 9시부터 1교시라고 가정
+  return (period >= 1 && period <= 15) ? period : 1;
+}
+app.get('/lecture-status', (req, res) => {
+  const now = new Date();
+  const day = DAY_MAP[now.getDay()];
+  const period = getPeriod(now.getHours());
+
+  console.log("[DEBUG] 현재 시간:", now.toString());
+  console.log("[DEBUG] 요일:", day, "교시:", period);
+
+  if (!period) {
+    return res.json({ message: "현재 시간이 교시 범위 밖입니다." });
+  }
+
+  const query = `
+    SELECT building, total
+    FROM lecture_summary
+    WHERE day = ? AND period = ?
+  `;
+  timeDB.all(query, [day, period], (err, rows) => {
+    if (err) {
+      console.error("[DEBUG] 쿼리 오류:", err);
+      return res.status(500).json({ error: "DB 조회 실패" });
+    }
+    if (!rows.length) {
+      console.log("[DEBUG] 해당 요일/교시 데이터 없음");
+      return res.json({ message: "데이터 없음" });
+    }
+
+    // 결과를 단순 리스트로 반환
+    const list = rows.map(r => ({
+      building: r.building,
+      total: r.total
+    }));
+    console.log("[DEBUG] 반환 리스트:", list);
+
+    res.json(list);
+  });
+});
+
+// 좌석 점유 카운트 API
+app.get('/occupied-count', (req, res) => {
+  seatDB.get(`SELECT COUNT(*) AS count FROM seats WHERE occupied = 1`, (err, row) => {
+    if (err) {
+      console.error("DB 조회 오류:", err);
+      return res.status(500).json({ error: "DB 조회 실패" });
+    }
+    res.json({ occupiedCount: row.count });
+  });
 });
 
 http.listen(port, () => {

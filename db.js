@@ -6,6 +6,9 @@ const userDB = new sqlite3.Database('./shadow.sqlite');
 // 좌석 DB
 const seatDB = new sqlite3.Database('./seats.sqlite');
 
+// 시간표 DB
+const timeDB = new sqlite3.Database('./timetable.sqlite');
+
 // 사용자 DB 초기화
 userDB.serialize(() => {
   userDB.run(`CREATE TABLE IF NOT EXISTS users (
@@ -32,4 +35,13 @@ seatDB.serialize(() => {
               VALUES (1, 0, 120, 80)`);
 });
 
-module.exports = { userDB, seatDB };
+timeDB.serialize(() => {
+  timeDB.run(`CREATE TABLE IF NOT EXISTS lecture_summary (
+    building TEXT,
+    day TEXT,
+    period INTEGER,
+    total REAL
+  )`);
+});
+
+module.exports = { userDB, seatDB, timeDB };

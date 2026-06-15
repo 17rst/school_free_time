@@ -21,13 +21,9 @@ document.getElementById('home-btn').addEventListener('click', () => {
     window.location.href = "/view/index.html";
 });
 
-// ===== 제1실습관 혼잡도 박스 =====
-// seats.sqlite 위치: school_free_time/seats.sqlite (이 파일 기준 ../../seats.sqlite)
-const SEATS_DB_PATH = "../../seats.sqlite";
-const SQL_JS_WASM = "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/";
-const CONGESTION_REFRESH_MS = 30000; // 30초마다 갱신
-
-async function updateCongestion() {
+// 서버 API 호출 (Express에서 제공하는 /lecture-status)
+const REFRESH_MS = 30000; // 30초마다 갱신
+async function updateLectureStatus() {
   const statusEl = document.getElementById("congestion-status");
   const percentEl = document.getElementById("congestion-percent");
   const fillEl = document.getElementById("congestion-fill");
@@ -35,34 +31,40 @@ async function updateCongestion() {
   const boxEl = document.getElementById("congestion-box");
 
   try {
-    // sql.js 초기화 (전역 initSqlJs 는 sql-wasm.js 에서 제공)
-    const SQL = await initSqlJs({ locateFile: file => SQL_JS_WASM + file });
+    console.log("[DEBUG] /lecture-status API 호출");
+    const response = await fetch("/lecture-status");
+    if (!response.ok) throw new Error("API 응답 실패");
 
-    // seats.sqlite 읽기
-    const response = await fetch(SEATS_DB_PATH);
-    if (!response.ok) throw new Error("sqlite 파일을 불러올 수 없습니다.");
-    const buffer = await response.arrayBuffer();
-    const db = new SQL.Database(new Uint8Array(buffer));
+    const list = await response.json();
+    console.log("[DEBUG] API 응답 데이터:", list);
 
-    // 전체 좌석 수 / 사용중 좌석 수 집계
-    const result = db.exec(
-      "SELECT COUNT(*) AS total, COALESCE(SUM(occupied), 0) AS occupied FROM seats"
-    );
-    db.close();
-
-    const total = result[0].values[0][0];
-    const occupied = result[0].values[0][1];
-
-    if (!total) {
+    if (!Array.isArray(list) || list.length === 0) {
       statusEl.textContent = "정보 없음";
       percentEl.textContent = "-";
       return;
     }
 
-    // 혼잡도(%) = 사용중 좌석 / 전체 좌석, 최대 100
-    const percent = Math.min(100, Math.round((occupied / total) * 100));
+    // 대강당 데이터만 찾기
+    const hall = list.find(item => item.building === "제1실습관");
+    if (!hall) {
+      statusEl.textContent = "대강당 정보 없음";
+      percentEl.textContent = "-";
+      return;
+    }
 
-    // 33%씩 구간 분리: 0~33 여유 / 34~66 보통 / 67~100 혼잡
+    const hallCount = hall.total || 0;
+    const totalCount = list.reduce((sum, item) => sum + (item.total || 0), 0);
+
+    console.log("[DEBUG] 대강당 인원수:", hallCount);
+    console.log("[DEBUG] 전체 인원수:", totalCount);
+
+    // 혼잡도 = 대강당 인원 / 전체 인원
+    let percent = 0;
+    if (totalCount > 0) {
+      percent = Math.round((hallCount / totalCount) * 100);
+    }
+    console.log("[DEBUG] 혼잡도(%):", percent);
+
     let status, statusClass;
     if (percent <= 33) {
       status = "여유 있음";
@@ -81,13 +83,14 @@ async function updateCongestion() {
     statusEl.textContent = status;
     percentEl.textContent = `${percent}%`;
     fillEl.style.width = `${percent}%`;
-    countEl.textContent = `${occupied} / ${total}석`;
+    countEl.textContent = `${hallCount}명 / 전체 ${totalCount}명`;
   } catch (err) {
-    console.error("혼잡도 정보를 불러오지 못했습니다:", err);
+    console.error("강의실 정보를 불러오지 못했습니다:", err);
     statusEl.textContent = "정보 없음";
     percentEl.textContent = "-";
   }
 }
 
-updateCongestion();
-setInterval(updateCongestion, CONGESTION_REFRESH_MS);
+
+updateLectureStatus();
+setInterval(updateLectureStatus, REFRESH_MS);
