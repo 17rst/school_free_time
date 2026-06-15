@@ -59,3 +59,186 @@ body {
   padding: 10px;
   cursor: pointer;
 }
+
+/* ===== 혼잡도 박스 (Everytime 스타일) ===== */
+.congestion-box {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 30;
+
+  width: 190px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border-radius: 14px;
+  border-left: 5px solid #d9dde2;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+  transition: border-color 0.3s ease;
+}
+
+.congestion-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.congestion-building {
+  font-size: 13px;
+  font-weight: 800;
+  color: #222;
+  letter-spacing: 0.2px;
+}
+
+.congestion-live {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  color: #9aa0a6;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2ed573;
+  animation: congestion-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes congestion-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.congestion-main {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.congestion-status {
+  font-size: 17px;
+  font-weight: 800;
+  color: #9aa0a6;
+  transition: color 0.3s ease;
+}
+
+.congestion-percent {
+  font-size: 20px;
+  font-weight: 800;
+  color: #222;
+  font-variant-numeric: tabular-nums;
+}
+
+.congestion-bar {
+  width: 100%;
+  height: 6px;
+  background: #eef0f2;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.congestion-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 4px;
+  background: #9aa0a6;
+  transition: width 0.5s ease, background-color 0.3s ease;
+}
+
+.congestion-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: #b0b4b9;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 여유 있음 (0~33%) */
+.congestion-box.status-low {
+  border-left-color: #2ed573;
+}
+.congestion-box.status-low .congestion-status,
+.congestion-box.status-low .congestion-percent {
+  color: #28b463;
+}
+.congestion-box.status-low .congestion-fill {
+  background: #2ed573;
+}
+.congestion-box.status-low .live-dot {
+  background: #2ed573;
+}
+
+/* 보통 (34~66%) */
+.congestion-box.status-mid {
+  border-left-color: #ffc542;
+}
+.congestion-box.status-mid .congestion-status,
+.congestion-box.status-mid .congestion-percent {
+  color: #f0a500;
+}
+.congestion-box.status-mid .congestion-fill {
+  background: #ffc542;
+}
+.congestion-box.status-mid .live-dot {
+  background: #ffc542;
+}
+
+/* 혼잡 (67~100%) */
+.congestion-box.status-high {
+  border-left-color: #ff5c5c;
+}
+.congestion-box.status-high .congestion-status,
+.congestion-box.status-high .congestion-percent {
+  color: #ff5c5c;
+}
+.congestion-box.status-high .congestion-fill {
+  background: #ff5c5c;
+}
+.congestion-box.status-high .live-dot {
+  background: #ff5c5c;
+}
+
+@media (max-width: 700px) {
+  .congestion-box {
+    top: 10px;
+    right: 10px;
+    width: 46vw;
+    min-width: 180px;
+    max-width: 240px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border-left-width: 6px;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.16);
+  }
+  .congestion-top { margin-bottom: 10px; }
+  .congestion-building { font-size: 14px; }
+  .congestion-live { font-size: 11px; }
+  .congestion-status { font-size: 18px; }
+  .congestion-percent { font-size: 24px; }
+  .congestion-bar { height: 7px; margin-bottom: 8px; }
+  .congestion-count { font-size: 12px; }
+}
+
+@media (max-width: 380px) {
+  .congestion-box {
+    top: 8px;
+    right: 8px;
+    width: 50vw;
+    min-width: 160px;
+    padding: 10px 12px;
+  }
+  .congestion-building { font-size: 13px; }
+  .congestion-live { font-size: 10px; }
+  .congestion-status { font-size: 16px; }
+  .congestion-percent { font-size: 21px; }
+  .congestion-count { font-size: 11px; }
+}
