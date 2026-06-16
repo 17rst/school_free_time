@@ -1,4 +1,3 @@
-// 뒤로가기 버튼
 document.getElementById('home-btn').addEventListener('click', () => {
     window.location.href = "/";
 });
@@ -25,16 +24,20 @@ document.querySelectorAll(".building").forEach(building => {
   building.addEventListener("mouseenter", async e => {
     const name = building.alt;
     let statusText = "정보 없음";
+    let statusLevel = ""; // 'free' | 'normal' | 'busy' | ''
 
     try {
       if (name === "도서관") {
-        // 도서관일 때만 occupied-count API 호출
         const response = await fetch("/occupied-count");
         if (!response.ok) throw new Error("API 응답 실패");
         const data = await response.json();
-        statusText = `1층 여유 좌석 수: ${188-data.occupiedCount}/188`;
+        const free = 188 - data.occupiedCount;
+        const pct  = Math.round((data.occupiedCount / 188) * 100);
+        statusText = `1층 여유 좌석 수: ${free}/188`;
+        if (pct <= 33)      statusLevel = "free";
+        else if (pct <= 66) statusLevel = "normal";
+        else                statusLevel = "busy";
       } else {
-        // 다른 건물은 lecture-status API 호출
         const response = await fetch("/lecture-status");
         if (!response.ok) throw new Error("API 응답 실패");
         const list = await response.json();
@@ -43,44 +46,39 @@ document.querySelectorAll(".building").forEach(building => {
         let percent = 0;
 
         if (hall) {
-          const hallCount = hall.total || 0;
+          const hallCount  = hall.total || 0;
           const totalCount = list.reduce((sum, item) => sum + (item.total || 0), 0);
-
-          if (totalCount > 0) {
-            percent = Math.round((hallCount / totalCount) * 100);
-          }
+          if (totalCount > 0) percent = Math.round((hallCount / totalCount) * 100);
 
           if (percent <= 33) {
-            statusText = `여유 있음 (${percent}%)`;
+            statusText  = `여유 있음 (${percent}%)`;
+            statusLevel = "free";
           } else if (percent <= 66) {
-            statusText = `보통 (${percent}%)`;
+            statusText  = `보통 (${percent}%)`;
+            statusLevel = "normal";
           } else {
-            statusText = `혼잡 (${percent}%)`;
+            statusText  = `혼잡 (${percent}%)`;
+            statusLevel = "busy";
           }
         }
       }
-
-      // 말풍선 표시
-      tooltip.textContent = `${name} - ${statusText}`;
-      tooltip.style.left = `${e.pageX}px`;
-      tooltip.style.top = `${e.pageY - 30}px`;
-      tooltip.classList.add("show");
-
     } catch (err) {
       console.error("정보를 불러오지 못했습니다:", err);
-      tooltip.textContent = `${name} - 정보 없음`;
-      tooltip.style.left = `${e.pageX}px`;
-      tooltip.style.top = `${e.pageY - 30}px`;
-      tooltip.classList.add("show");
+      statusText = "정보 없음";
     }
+
+    tooltip.textContent = `${name} — ${statusText}`;
+    tooltip.className   = "tooltip show" + (statusLevel ? " " + statusLevel : "");
+    tooltip.style.left  = `${e.pageX}px`;
+    tooltip.style.top   = `${e.pageY - 30}px`;
   });
 
   building.addEventListener("mousemove", e => {
     tooltip.style.left = `${e.pageX}px`;
-    tooltip.style.top = `${e.pageY - 30}px`;
+    tooltip.style.top  = `${e.pageY - 30}px`;
   });
 
   building.addEventListener("mouseleave", () => {
-    tooltip.classList.remove("show");
+    tooltip.className = "tooltip";
   });
 });
