@@ -2,16 +2,84 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>도서관 자리 안내</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>도서관 자리 안내 — 공강녹이기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  
-    <button id="home-btn">← 뒤로가기</button>
-  <h1>도서관 자리 안내 및 추천</h1>
-  <div id="seat-map">
+  <div class="page-wrap">
+
+    <div class="top-bar">
+      <button class="back-btn" id="home-btn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        뒤로가기
+      </button>
+      <div class="page-logo">공강<span>녹이기</span></div>
+    </div>
+
+    <div class="page-title">도서관 자리 안내</div>
+    <div class="page-sub">실시간 좌석 현황 및 KNN 기반 추천 좌석을 확인하세요</div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot ld-free"></div>빈 자리</div>
+      <div class="legend-item"><div class="legend-dot ld-occ"></div>사용 중</div>
+      <div class="legend-item"><div class="legend-dot ld-rec"></div>추천 좌석</div>
+    </div>
+
+    <div class="main-layout">
+      <div class="map-card">
+        <div class="map-card-header">
+          <span class="map-card-title">좌석 배치도</span>
+          <span class="map-card-badge" id="seat-count">로딩 중...</span>
+        </div>
+        <div class="map-body">
+          <div id="seat-map"></div>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="rec-card">
+          <div class="rec-card-header">
+            <div class="rec-card-label">AI 추천</div>
+            <div class="rec-card-title">추천 좌석</div>
+          </div>
+          <div class="rec-body">
+            <div class="rec-number" id="rec-number">—</div>
+            <div class="rec-desc" id="recommendation">추천 정보를 불러오는 중입니다...</div>
+          </div>
+        </div>
+
+        <div class="stats-card">
+          <div class="stats-label">현황 요약</div>
+          <div class="stat-row">
+            <span class="stat-name">전체 좌석</span>
+            <span class="stat-val" id="stat-total">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-name">빈 자리</span>
+            <span class="stat-val green" id="stat-free">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-name">사용 중</span>
+            <span class="stat-val red" id="stat-occ">—</span>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">
+              <span>혼잡도</span>
+              <span id="bar-pct">—</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill low" id="bar-fill" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-  <div id="recommendation"></div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="index.js"></script>
