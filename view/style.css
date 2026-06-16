@@ -1,33 +1,28 @@
 body {
   margin: 0;
   padding: 0;
-  overflow: auto; /* 스크롤 허용 */
+  overflow: auto;
 }
 
-/* 캠퍼스 컨테이너: 원본 배경 크기 고정 */
 .campus {
   position: relative;
-  width: 1920px;   /* 원본 배경 너비 */
-  height: 1080px;  /* 원본 배경 높이 */
+  width: 1920px;
+  height: 1080px;
   margin: 0 auto;
 }
 
-/* 배경 이미지 */
 .bg {
   width: 100%;
   height: 100%;
   object-fit: cover;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   z-index: -1;
 }
 
-/* 뒤로가기 버튼 */
 #home-btn {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 20px; left: 20px;
   padding: 8px 12px;
   font-size: 14px;
   background: rgba(255,255,255,0.8);
@@ -37,126 +32,85 @@ body {
   transition: background 0.2s ease;
   z-index: 10;
 }
-#backBtn:hover {
-  background: rgba(200,200,200,0.9);
-}
-/* 말풍선 기본 스타일 */
+#home-btn:hover { background: rgba(200,200,200,0.9); }
+
+/* ─── TOOLTIP ───────────────────────────────────────── */
 .tooltip {
   position: absolute;
-  background: #fff;
-  color: #222;
-  padding: 8px 12px;
+  padding: 7px 14px;
   border-radius: 8px;
   font-size: 13px;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-weight: 700;
   white-space: nowrap;
   pointer-events: none;
   transform: translate(-50%, -120%);
   opacity: 0;
   transition: opacity 0.2s ease;
   z-index: 20;
+  /* 기본: 흰 배경 */
+  background: #fff;
+  color: #222;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 2px solid transparent;
 }
-
-/* 말풍선 꼬리 */
 .tooltip::after {
   content: "";
   position: absolute;
-  bottom: -6px;
-  left: 50%;
+  bottom: -7px; left: 50%;
   transform: translateX(-50%);
   border-width: 6px;
   border-style: solid;
-  border-color: #fff transparent transparent transparent;
+  border-color: currentColor transparent transparent transparent;
 }
+.tooltip.show { opacity: 1; }
 
-.tooltip.show {
-  opacity: 1;
+/* 여유 있음 — 초록 */
+.tooltip.free {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-color: #4caf50;
 }
+.tooltip.free::after  { border-top-color: #4caf50; }
 
+/* 보통 — 노란 */
+.tooltip.normal {
+  background: #fff8e1;
+  color: #f57f17;
+  border-color: #ffc107;
+}
+.tooltip.normal::after { border-top-color: #ffc107; }
 
+/* 혼잡 — 빨강 */
+.tooltip.busy {
+  background: #fde8e8;
+  color: #b71c1c;
+  border-color: #e02020;
+}
+.tooltip.busy::after  { border-top-color: #e02020; }
 
-/* 누끼 건물 이미지 */
+/* ─── BUILDINGS ─────────────────────────────────────── */
 .building {
   position: absolute;
   transition: transform 0.3s ease, filter 0.3s ease;
   cursor: pointer;
 }
-
-/* hover 효과 */
 .building:hover {
   transform: translateY(-10px);
   filter: brightness(0.8) drop-shadow(0 5px 5px rgba(0,0,0,0.5));
-  
 }
 
-/* 건물 위치와 크기 (원본 배경 좌표 기준) */
-#building1 {
-  top: 331px;
-  left: 785px;
-}
-
-#building2 {
-  top: 454px;
-  left: 1000px;
-}
-
-#building3 {
-  top: 287px;
-  left: 785px;
-}
-#building4 {
-  top: 475px;
-  left: 1188px;
-}
-
-#building5 {
-  top: 400px;
-  left: 908px;
-}
-#building6 {
-  top: 360px;
-  left: 560px;
-}
-
-#building7 {
-  top: 320px;
-  left: 895px;
-}
-
-#building8 {
-  top: 333px;
-  left: 385px;
-}
-#building9 {
-  top: 380px;
-  left: 340px;
-}
-
-#building10 {
-  top: 333px;
-  left: 895px;
-}
-#building11 {
-  top: 314px;
-  left: 623px;
-}
-
-#building12 {
-  top: 375px;
-  left: 1190px;
-}
-
-#building13 {
-  top: 455px;
-  left: 1440px;
-}
-#building14 {
-  top: 598px;
-  left: 725px;
-}
-
-#building15 {
-  top: 383px;
-  left: 1030px;
-}
+#building1  { top: 331px; left: 785px; }
+#building2  { top: 454px; left: 1000px; }
+#building3  { top: 287px; left: 785px; }
+#building4  { top: 475px; left: 1188px; }
+#building5  { top: 400px; left: 908px; }
+#building6  { top: 360px; left: 560px; }
+#building7  { top: 320px; left: 895px; }
+#building8  { top: 333px; left: 385px; }
+#building9  { top: 380px; left: 340px; }
+#building10 { top: 333px; left: 895px; }
+#building11 { top: 314px; left: 623px; }
+#building12 { top: 375px; left: 1190px; }
+#building13 { top: 455px; left: 1440px; }
+#building14 { top: 598px; left: 725px; }
+#building15 { top: 383px; left: 1030px; }
